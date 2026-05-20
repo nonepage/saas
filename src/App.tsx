@@ -1,241 +1,452 @@
-import type { ComponentType } from 'react'
 import {
   ArrowRight,
-  BadgeCheck,
   BookOpen,
+  Building2,
   Check,
   ChevronRight,
-  CircleDollarSign,
-  ClipboardCheck,
-  CloudCog,
-  Cpu,
+  Code2,
+  CreditCard,
   FileText,
-  Fingerprint,
-  Gauge,
   Globe2,
-  Layers3,
-  LockKeyhole,
-  Mail,
+  Languages,
   Menu,
-  MessageSquare,
+  Moon,
   Network,
   ShieldCheck,
   Sparkles,
+  Sun,
   Terminal,
-  Workflow,
   X,
+  Zap,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import type { ComponentType } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
 
-type IconType = ComponentType<{ className?: string }>
+type Icon = ComponentType<{ className?: string }>
+type Lang = 'en' | 'zh'
+type Theme = 'light' | 'dark'
 
-const company = {
-  name: 'VectorGrid AI',
-  tagline: 'Enterprise AI infrastructure for teams that ship with confidence.',
-  email: 'hello@vectorgrid.example',
+const brand = {
+  name: 'Spark Gravity',
+  company: 'Spark Gravity LLC',
+  tagline: 'Enterprise AI Solutions',
+  email: 'support@sparkgravity.ai',
+  address: '131 Continental Dr Suite 305 Newark, DE, 19713 US',
 }
 
-const navItems = [
-  { label: 'Products', to: '/products' },
-  { label: 'Services', to: '/services' },
-  { label: 'Pricing', to: '/pricing' },
-  { label: 'Docs', to: '/docs' },
-  { label: 'Blog', to: '/blog' },
-  { label: 'Contact', to: '/contact' },
+const copy = {
+  en: {
+    nav: {
+      home: 'Home',
+      pricing: 'Pricing',
+      about: 'About',
+      contact: 'Contact',
+      docs: 'Docs',
+      blog: 'Blog',
+      changelog: 'Changelog',
+    },
+    actions: {
+      signIn: 'Sign in',
+      buyCredits: 'Buy credits',
+      learnMore: 'Learn more',
+      back: 'Back',
+    },
+    home: {
+      hero: {
+        eyebrow: brand.company,
+        title: 'Enterprise AI, built on leading LLMs.',
+        subtitle:
+          'Spark Gravity delivers AI products and model infrastructure for teams adopting Claude, GPT, Gemini, and private workflows with confidence. Secure, compliant, and ready to scale.',
+        primary: 'Buy AI credits',
+        secondary: 'Explore our products',
+      },
+      valuesHeading: 'Why Spark Gravity',
+      values: [
+        {
+          title: 'Compliance-first',
+          desc: 'Built with enterprise requirements in mind: auditable orders, verified payments, clear data handling, and policy-ready workflows.',
+        },
+        {
+          title: 'Model-native',
+          desc: 'Access leading models through a clean commercial layer, with USD credits and consistent operational controls.',
+        },
+        {
+          title: 'Developer-friendly',
+          desc: 'Straightforward docs, stable product surfaces, and integration patterns that help teams move quickly.',
+        },
+      ],
+      productsHeading: 'Our products',
+      live: 'Live',
+      comingSoon: 'Coming soon',
+      products: [
+        {
+          name: 'Orbit Terminal',
+          desc: 'LLM relay for builders: Claude, Codex-style coding agents, Gemini, and more in one controlled workspace.',
+          live: true,
+        },
+        {
+          name: 'Gravity Copilot',
+          desc: 'A model-powered assistant that connects to internal tools and keeps human approvals in the loop.',
+        },
+        {
+          name: 'Spark Gateway',
+          desc: 'Unified API layer with observability, billing controls, rate limits, and security-focused routing.',
+        },
+      ],
+      credits: {
+        heading: 'Need AI model credits now?',
+        subtitle: 'Prepaid USD credits. Use them across Spark Gravity services as they roll out.',
+        button: 'Go to pricing',
+      },
+    },
+    pricing: {
+      title: 'AI Model Credits',
+      subtitle: 'Prepaid credits in USD. Redeem across Spark Gravity services.',
+      tableHeading: 'Model pricing',
+      note: 'Prices shown per 1M tokens (USD). Replace the sample figures with your provider list prices before launch.',
+      model: 'Model',
+      input: 'Input',
+      output: 'Output',
+      cacheRead: 'Cache read',
+      cacheWrite: 'Cache write',
+      select: 'Select an amount',
+      custom: 'Custom amount (USD)',
+      placeholder: '50.00',
+      min: 'Minimum $0.50',
+      max: 'Maximum $5,000.00',
+      whatYouGet: 'What you get',
+      included: [
+        'USD-denominated credits added to your Spark Gravity balance.',
+        'Usable across Spark Gravity products as they become available.',
+        'Receipt by email and order history in your account.',
+        'Refundable per the published refund policy.',
+      ],
+    },
+    about: {
+      heading: 'About Spark Gravity',
+      intro: [
+        'Spark Gravity LLC is an AI product company focused on bringing leading model capabilities into practical enterprise workflows.',
+        'We believe three things matter for adoption at scale: clean interfaces, auditable operations, and predictable billing. Every Spark Gravity product is designed around those principles.',
+      ],
+      build: 'What we are building',
+      contactHeading: 'Contact',
+      contactLead: 'Business, support, or general questions:',
+    },
+    contact: {
+      heading: 'Contact us',
+      subtitle: 'Questions, feedback, or interested in partnering? We would love to hear from you.',
+      email: 'Email',
+      company: 'Company',
+      address: 'Registered address',
+      addressSub: 'United States · Delaware LLC',
+      response: 'We typically respond within 2 business days.',
+    },
+    docs: {
+      heading: 'Docs',
+      subtitle: 'Implementation notes, product guides, and trust-center references for Spark Gravity services.',
+      empty: 'Documentation is being prepared. Check back soon for integration guides and API references.',
+    },
+    blog: {
+      heading: 'Blog',
+      subtitle: 'Company updates, AI operations notes, and practical guidance for enterprise model adoption.',
+      empty: 'No posts yet.',
+    },
+    changelog: {
+      heading: 'Changelog',
+      subtitle: 'Product updates and release notes.',
+      empty: 'No changelog entries yet.',
+    },
+    legal: {
+      terms: 'Terms of Service',
+      privacy: 'Privacy Policy',
+      refund: 'Refund Policy',
+    },
+    footer: {
+      rights: 'All rights reserved.',
+      legal: 'Legal',
+      product: 'Product',
+      resources: 'Resources',
+      powered: 'Payments secured by Stripe',
+    },
+  },
+  zh: {
+    nav: {
+      home: '首页',
+      pricing: '价格',
+      about: '关于我们',
+      contact: '联系我们',
+      docs: '文档',
+      blog: '博客',
+      changelog: '更新日志',
+    },
+    actions: {
+      signIn: '登录',
+      buyCredits: '购买额度',
+      learnMore: '了解更多',
+      back: '返回',
+    },
+    home: {
+      hero: {
+        eyebrow: brand.company,
+        title: '构建于多种大模型之上的企业 AI 平台。',
+        subtitle:
+          'Spark Gravity 为企业 AI 落地提供产品与模型基础设施，支持 Claude、GPT、Gemini 与私有工作流。安全、合规、可扩展。',
+        primary: '购买 AI 额度',
+        secondary: '了解我们的产品',
+      },
+      valuesHeading: '为什么选择 Spark Gravity',
+      values: [
+        {
+          title: '合规优先',
+          desc: '面向企业需求设计：可审计订单、可靠支付、清晰的数据处理与可落地的策略流程。',
+        },
+        {
+          title: '模型原生',
+          desc: '通过清晰的商业层接入主流模型，以美元额度和统一运营控制管理使用。',
+        },
+        {
+          title: '对开发者友好',
+          desc: '清晰文档、稳定产品边界与可复制的集成模式，帮助团队快速推进。',
+        },
+      ],
+      productsHeading: '我们的产品',
+      live: '在线',
+      comingSoon: '即将推出',
+      products: [
+        {
+          name: 'Orbit Terminal',
+          desc: '面向开发者的大模型中转工作台：Claude、代码代理、Gemini 等一站接入。',
+          live: true,
+        },
+        {
+          name: 'Gravity Copilot',
+          desc: '连接内部工具的模型助手，并保留关键节点的人类审批。',
+        },
+        {
+          name: 'Spark Gateway',
+          desc: '统一 API 层，内置观测、计费控制、限流与安全路由。',
+        },
+      ],
+      credits: {
+        heading: '现在就需要 AI 模型额度？',
+        subtitle: '美元预付费额度。可在 Spark Gravity 服务上线后跨产品使用。',
+        button: '前往价格页',
+      },
+    },
+    pricing: {
+      title: 'AI 模型额度',
+      subtitle: '美元预付费额度，可在 Spark Gravity 各项服务中使用。',
+      tableHeading: '模型价格',
+      note: '单价为每 100 万 tokens（美元）。上线前请替换为实际服务商价格。',
+      model: '模型',
+      input: '输入',
+      output: '输出',
+      cacheRead: '缓存读',
+      cacheWrite: '缓存写',
+      select: '选择金额',
+      custom: '自定义金额（美元）',
+      placeholder: '50.00',
+      min: '最少 $0.50',
+      max: '最多 $5,000.00',
+      whatYouGet: '你将获得',
+      included: [
+        '以美元计价的额度将充值到 Spark Gravity 余额。',
+        '随 Spark Gravity 产品上线，可跨产品消费。',
+        '邮件收据与账户订单记录。',
+        '按照公开退款政策可申请退款。',
+      ],
+    },
+    about: {
+      heading: '关于 Spark Gravity',
+      intro: [
+        'Spark Gravity LLC 专注于将主流模型能力带入真实企业工作流。',
+        '我们相信规模化 AI 落地需要三件事：清晰接口、可审计流程和可预期账单。Spark Gravity 的产品围绕这些原则设计。',
+      ],
+      build: '我们在做什么',
+      contactHeading: '联系我们',
+      contactLead: '商务、支持或一般咨询：',
+    },
+    contact: {
+      heading: '联系我们',
+      subtitle: '有问题、反馈或想聊合作？欢迎随时来信。',
+      email: '邮箱',
+      company: '公司',
+      address: '注册地址',
+      addressSub: '美国 · Delaware LLC',
+      response: '我们通常在 2 个工作日内回复。',
+    },
+    docs: {
+      heading: '文档',
+      subtitle: 'Spark Gravity 服务的集成说明、产品指南与信任中心资料。',
+      empty: '文档正在准备中。稍后将提供集成指南与 API 参考。',
+    },
+    blog: {
+      heading: '博客',
+      subtitle: '公司更新、AI 运营笔记与企业模型采用实践。',
+      empty: '暂无文章。',
+    },
+    changelog: {
+      heading: '更新日志',
+      subtitle: '产品更新与发布说明。',
+      empty: '暂无更新日志。',
+    },
+    legal: {
+      terms: '服务条款',
+      privacy: '隐私政策',
+      refund: '退款政策',
+    },
+    footer: {
+      rights: '保留所有权利。',
+      legal: '法律条款',
+      product: '产品',
+      resources: '资源',
+      powered: '支付由 Stripe 安全处理',
+    },
+  },
+}
+
+const pricingRows = [
+  ['Claude 3.5 Sonnet', '$3.00', '$15.00', '$0.30', '$3.75'],
+  ['GPT-4.1', '$2.00', '$8.00', '$0.50', '-'],
+  ['Gemini 2.5 Pro', '$1.25', '$10.00', '$0.31', '$4.50'],
+  ['DeepSeek Reasoner', '$0.55', '$2.19', '$0.14', '-'],
 ]
 
-const products = [
-  {
-    icon: Cpu,
-    title: 'Model Gateway',
-    text: 'Route AI workloads across approved providers with policy checks, budget controls, and full request visibility.',
-  },
-  {
-    icon: Workflow,
-    title: 'Automation Studio',
-    text: 'Design review, support, and research workflows that combine human approvals with secure model actions.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Governance Console',
-    text: 'Track usage, risk, prompts, vendors, and audit trails from a single command center for leadership and security.',
-  },
-]
+function App() {
+  const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('lang') as Lang) || 'en')
+  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem('theme') as Theme) || 'light')
+  const t = copy[lang]
 
-const services = [
-  'AI readiness assessment',
-  'Secure model integration',
-  'Private knowledge workflows',
-  'Prompt and evaluation systems',
-  'Payment and credit operations',
-  'Ongoing enablement for teams',
-]
+  useEffect(() => {
+    localStorage.setItem('lang', lang)
+    document.documentElement.lang = lang
+  }, [lang])
 
-const metrics = [
-  ['48h', 'prototype window'],
-  ['99.9%', 'observability target'],
-  ['12', 'governance checks'],
-  ['SOC2+', 'deployment posture'],
-]
+  useEffect(() => {
+    localStorage.setItem('theme', theme)
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+  }, [theme])
 
-const pricing = [
-  {
-    name: 'Launch',
-    price: '$1,500',
-    detail: 'For a focused website, pilot, or executive demo.',
-    features: ['AI product positioning', 'One workflow prototype', 'Analytics-ready frontend', 'Deployment guide'],
-  },
-  {
-    name: 'Scale',
-    price: '$4,800',
-    detail: 'For teams moving AI into real operations.',
-    featured: true,
-    features: ['Product and service site', 'Secure workflow architecture', 'Stripe-ready commercial pages', 'Docs and changelog'],
-  },
-  {
-    name: 'Enterprise',
-    price: 'Custom',
-    detail: 'For regulated or multi-team deployments.',
-    features: ['Governance model', 'Vendor risk mapping', 'Private integrations', 'Delivery roadmap'],
-  },
-]
-
-const docs = [
-  {
-    slug: 'deployment',
-    title: 'Deployment Guide',
-    excerpt: 'Recommended hosting, domain, CDN, and environment setup for the static frontend.',
-  },
-  {
-    slug: 'security',
-    title: 'Security Notes',
-    excerpt: 'How to present AI products responsibly with clear data handling and compliance language.',
-  },
-  {
-    slug: 'content-model',
-    title: 'Content Model',
-    excerpt: 'A practical structure for products, services, pricing, docs, changelog, and blog content.',
-  },
-]
-
-const posts = [
-  {
-    slug: 'enterprise-ai-buying',
-    title: 'What enterprise buyers expect from an AI vendor website',
-    date: 'May 12, 2026',
-    excerpt: 'Trust signals, plain language, use cases, and commercial paths matter more than spectacle.',
-  },
-  {
-    slug: 'governance-first',
-    title: 'Governance-first AI does not need to feel slow',
-    date: 'April 28, 2026',
-    excerpt: 'A small number of opinionated controls can make pilots faster and easier to approve.',
-  },
-]
-
-const changelog = [
-  ['v1.2.0', 'Added pricing comparison, legal pages, and deployment notes.'],
-  ['v1.1.0', 'Improved product cards and service discovery sections.'],
-  ['v1.0.0', 'Initial open-source enterprise AI website release.'],
-]
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <ScrollToTop />
+      <Header t={t} lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home t={t} />} />
+          <Route path="/pricing" element={<Pricing t={t} />} />
+          <Route path="/about" element={<About t={t} />} />
+          <Route path="/contact" element={<Contact t={t} />} />
+          <Route path="/docs" element={<EmptyPage icon={BookOpen} title={t.docs.heading} subtitle={t.docs.subtitle} empty={t.docs.empty} />} />
+          <Route path="/blog" element={<EmptyPage icon={FileText} title={t.blog.heading} subtitle={t.blog.subtitle} empty={t.blog.empty} />} />
+          <Route path="/changelog" element={<EmptyPage icon={Zap} title={t.changelog.heading} subtitle={t.changelog.subtitle} empty={t.changelog.empty} />} />
+          <Route path="/terms" element={<PolicyPage title={t.legal.terms} t={t} />} />
+          <Route path="/privacy" element={<PolicyPage title={t.legal.privacy} t={t} />} />
+          <Route path="/refund" element={<PolicyPage title={t.legal.refund} t={t} />} />
+          <Route path="*" element={<NotFound t={t} />} />
+        </Routes>
+      </main>
+      <Footer t={t} />
+    </div>
+  )
+}
 
 function ScrollToTop() {
-  const location = useLocation()
+  const { pathname } = useLocation()
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [location.pathname])
+  }, [pathname])
 
   return null
 }
 
-function App() {
-  return (
-    <>
-      <ScrollToTop />
-      <div className="min-h-screen text-slate-900">
-        <Header />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/docs" element={<DocsPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/changelog" element={<ChangelogPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/terms" element={<LegalPage type="terms" />} />
-            <Route path="/privacy" element={<LegalPage type="privacy" />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </>
-  )
-}
-
-function Header() {
+function Header({
+  t,
+  lang,
+  setLang,
+  theme,
+  setTheme,
+}: {
+  t: (typeof copy)['en']
+  lang: Lang
+  setLang: (lang: Lang) => void
+  theme: Theme
+  setTheme: (theme: Theme) => void
+}) {
   const [open, setOpen] = useState(false)
+  const nav = [
+    ['/', t.nav.home],
+    ['/pricing', t.nav.pricing],
+    ['/about', t.nav.about],
+    ['/contact', t.nav.contact],
+    ['/docs', t.nav.docs],
+    ['/blog', t.nav.blog],
+    ['/changelog', t.nav.changelog],
+  ]
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/86 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/75 backdrop-blur supports-[backdrop-filter]:bg-background/75">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-3" aria-label={`${company.name} home`}>
-          <LogoMark />
-          <span className="text-sm font-bold tracking-wide text-slate-950">{company.name}</span>
+        <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+          <BrandLogo />
+          <span className="font-semibold tracking-tight">{brand.name}</span>
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
-          {navItems.map((item) => (
+          {nav.map(([to, label]) => (
             <NavLink
-              key={item.to}
-              to={item.to}
+              key={to}
+              to={to}
               className={({ isActive }) =>
-                `rounded-md px-3 py-2 text-sm font-medium transition ${
-                  isActive ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
+                `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                 }`
               }
+              end={to === '/'}
             >
-              {item.label}
+              {label}
             </NavLink>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 md:flex">
-          <Link to="/changelog" className="text-sm font-medium text-slate-600 transition hover:text-slate-950">
-            Changelog
-          </Link>
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800"
-          >
-            Talk to us
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+        <div className="hidden items-center gap-2 md:flex">
+          <IconButton label="language" onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}>
+            <Languages className="h-4 w-4" />
+            <span className="text-xs">{lang === 'en' ? '中文' : 'EN'}</span>
+          </IconButton>
+          <IconButton label="theme" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+            {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </IconButton>
+          <a href="/oauth/login" className="rounded-md border border-input px-3 py-2 text-sm font-medium hover:bg-accent">
+            {t.actions.signIn}
+          </a>
         </div>
         <button
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 bg-white md:hidden"
           type="button"
-          aria-label={open ? 'Close navigation' : 'Open navigation'}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input md:hidden"
           onClick={() => setOpen((value) => !value)}
+          aria-label="Toggle navigation"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
       {open && (
-        <div className="border-t border-slate-200 bg-white px-4 py-3 md:hidden">
+        <div className="border-t border-border bg-background px-4 py-3 md:hidden">
           <div className="mx-auto grid max-w-6xl gap-1">
-            {[...navItems, { label: 'Changelog', to: '/changelog' }].map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="rounded-md px-3 py-3 text-sm font-medium text-slate-700"
-                onClick={() => setOpen(false)}
-              >
-                {item.label}
+            {nav.map(([to, label]) => (
+              <Link key={to} to={to} className="rounded-md px-3 py-3 text-sm font-medium" onClick={() => setOpen(false)}>
+                {label}
               </Link>
             ))}
+            <div className="flex gap-2 px-3 py-2">
+              <IconButton label="language" onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}>
+                <Languages className="h-4 w-4" />
+                <span className="text-xs">{lang === 'en' ? '中文' : 'EN'}</span>
+              </IconButton>
+              <IconButton label="theme" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              </IconButton>
+            </div>
           </div>
         </div>
       )}
@@ -243,583 +454,357 @@ function Header() {
   )
 }
 
-function LogoMark() {
+function IconButton({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
   return (
-    <span className="relative grid h-9 w-9 place-items-center rounded-lg bg-slate-950 text-white shadow-sm">
-      <Network className="h-5 w-5" />
-      <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-teal-400" />
-    </span>
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="inline-flex h-9 items-center gap-1.5 rounded-md border border-input px-2.5 text-sm hover:bg-accent"
+    >
+      {children}
+    </button>
   )
 }
 
-function Home() {
+function BrandLogo() {
+  return <img src="/logo.svg" alt="Spark Gravity logo" className="h-9 w-9 rounded-md" />
+}
+
+function Home({ t }: { t: (typeof copy)['en'] }) {
+  const valueIcons = [ShieldCheck, Sparkles, Code2]
+  const productIcons = [Terminal, Network, Globe2]
+
   return (
     <>
-      <Hero />
-      <TrustBar />
-      <Section
-        eyebrow="Products"
-        title="A sharper front door for enterprise AI work."
-        text="Present the value, controls, and buying path clearly, then give teams the confidence to start a real conversation."
-      >
-        <div className="grid gap-4 md:grid-cols-3">
-          {products.map((product) => (
-            <FeatureCard key={product.title} {...product} />
+      <section className="border-b border-border bg-gradient-to-b from-accent/40 to-background">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
+          <div className="mb-4 text-xs font-semibold uppercase tracking-widest text-primary">{t.home.hero.eyebrow}</div>
+          <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-foreground md:text-5xl">{t.home.hero.title}</h1>
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{t.home.hero.subtitle}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <ButtonLink to="/pricing">
+              {t.home.hero.primary}
+              <ArrowRight className="h-4 w-4" />
+            </ButtonLink>
+            <ButtonLink to="#products" variant="outline">
+              {t.home.hero.secondary}
+            </ButtonLink>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <h2 className="mb-10 text-2xl font-semibold tracking-tight md:text-3xl">{t.home.valuesHeading}</h2>
+        <div className="grid gap-6 md:grid-cols-3">
+          {t.home.values.map((item, index) => (
+            <Card key={item.title}>
+              <IconBox icon={valueIcons[index]} />
+              <h3 className="mb-2 font-semibold">{item.title}</h3>
+              <p className="text-sm text-muted-foreground">{item.desc}</p>
+            </Card>
           ))}
         </div>
-      </Section>
-      <OperationalSection />
-      <PricingPreview />
-      <ContentPreview />
-      <CTA />
+      </section>
+
+      <section id="products" className="border-t border-border bg-accent/30">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <h2 className="mb-10 text-2xl font-semibold tracking-tight md:text-3xl">{t.home.productsHeading}</h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            {t.home.products.map((product, index) => (
+              <Card key={product.name} className="bg-card">
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <IconBox icon={productIcons[index]} />
+                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${product.live ? 'bg-emerald-600 text-white' : 'bg-secondary text-secondary-foreground'}`}>
+                    {product.live ? t.home.live : t.home.comingSoon}
+                  </span>
+                </div>
+                <h3 className="mb-2 font-semibold">{product.name}</h3>
+                <p className="text-sm text-muted-foreground">{product.desc}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <div className="rounded-lg border border-dashed border-border/70 bg-muted/40 p-8 md:p-10">
+          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight">{t.home.credits.heading}</h2>
+              <p className="mt-3 text-muted-foreground">{t.home.credits.subtitle}</p>
+            </div>
+            <ButtonLink to="/pricing">
+              {t.home.credits.button}
+              <ArrowRight className="h-4 w-4" />
+            </ButtonLink>
+          </div>
+        </div>
+      </section>
     </>
   )
 }
 
-function Hero() {
-  return (
-    <section className="relative overflow-hidden border-b border-slate-200 bg-white">
-      <div className="shell-grid absolute inset-x-0 top-0 h-96 opacity-80" />
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[1.05fr_0.95fr] md:py-24">
-        <div className="flex flex-col justify-center">
-          <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-800">
-            <Sparkles className="h-3.5 w-3.5" />
-            Enterprise AI, made explainable
-          </div>
-          <h1 className="text-balance text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl md:text-6xl">
-            Build trust before the first AI pilot begins.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-            {company.name} is an open-source corporate website starter for AI infrastructure,
-            consulting, and service teams that need a credible public presence.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              to="/products"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-            >
-              Explore products
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              to="/docs"
-              className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
-            >
-              Read docs
-              <BookOpen className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {metrics.map(([value, label]) => (
-              <div key={label} className="border-l border-slate-200 pl-4">
-                <div className="text-2xl font-bold text-slate-950">{value}</div>
-                <div className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <HeroConsole />
-      </div>
-    </section>
-  )
-}
-
-function HeroConsole() {
-  const rows = [
-    ['routing', 'approved', 'claude-ops'],
-    ['risk', 'low', 'policy-12'],
-    ['budget', '$428', 'remaining'],
-    ['latency', '812ms', 'p95'],
-  ]
+function Pricing({ t }: { t: (typeof copy)['en'] }) {
+  const tiers = ['$10', '$50', '$100', '$500']
+  const [selected, setSelected] = useState('$50')
 
   return (
-    <div className="data-surface soft-shadow relative rounded-lg border border-slate-200 p-3">
-      <div className="rounded-md border border-slate-200 bg-white">
-        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-          <div>
-            <div className="text-sm font-semibold text-slate-950">AI operations board</div>
-            <div className="text-xs text-slate-500">Live vendor, policy, and spend signals</div>
+    <PageShell title={t.pricing.title} subtitle={t.pricing.subtitle}>
+      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+        <Card>
+          <h2 className="mb-2 text-xl font-semibold">{t.pricing.tableHeading}</h2>
+          <p className="mb-6 text-sm text-muted-foreground">{t.pricing.note}</p>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[620px] text-sm">
+              <thead>
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                  <th className="p-3">{t.pricing.model}</th>
+                  <th className="p-3">{t.pricing.input}</th>
+                  <th className="p-3">{t.pricing.output}</th>
+                  <th className="p-3">{t.pricing.cacheRead}</th>
+                  <th className="p-3">{t.pricing.cacheWrite}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pricingRows.map((row) => (
+                  <tr key={row[0]} className="border-b border-border last:border-0">
+                    {row.map((cell) => (
+                      <td key={cell} className="p-3">
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div className="flex items-center gap-2 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            healthy
-          </div>
-        </div>
-        <div className="grid gap-3 p-4">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <MiniPanel icon={Gauge} label="Daily usage" value="68%" />
-            <MiniPanel icon={LockKeyhole} label="Guardrails" value="12/12" />
-          </div>
-          <div className="overflow-hidden rounded-md border border-slate-200">
-            {rows.map(([key, status, note]) => (
-              <div key={key} className="grid grid-cols-[1fr_auto_auto] gap-3 border-b border-slate-100 px-3 py-3 last:border-b-0">
-                <span className="text-sm font-medium text-slate-700">{key}</span>
-                <span className="text-sm font-semibold text-slate-950">{status}</span>
-                <span className="text-xs text-slate-500">{note}</span>
-              </div>
-            ))}
-          </div>
-          <div className="code-window rounded-md bg-slate-950 p-4 text-xs leading-6 text-slate-200">
-            <div className="text-teal-300">$ vectorgrid deploy --policy enterprise</div>
-            <div className="text-slate-400">checks passed: audit, billing, privacy, docs</div>
-            <div className="text-white">release ready for production review</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function MiniPanel({ icon: Icon, label, value }: { icon: IconType; label: string; value: string }) {
-  return (
-    <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
-      <Icon className="h-5 w-5 text-teal-700" />
-      <div className="mt-4 text-2xl font-bold text-slate-950">{value}</div>
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</div>
-    </div>
-  )
-}
-
-function TrustBar() {
-  const items = ['Healthcare', 'Fintech', 'Developer tools', 'Operations', 'Professional services']
-
-  return (
-    <section className="border-b border-slate-200 bg-slate-50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-7 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <div className="text-sm font-semibold text-slate-500">Designed for teams where AI claims need evidence.</div>
-        <div className="flex flex-wrap gap-2">
-          {items.map((item) => (
-            <span key={item} className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600">
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function Section({ eyebrow, title, text, children }: { eyebrow: string; title: string; text: string; children: React.ReactNode }) {
-  return (
-    <section className="border-b border-slate-200 bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
-        <div className="mb-10 max-w-3xl">
-          <div className="text-xs font-bold uppercase tracking-[0.22em] text-teal-700">{eyebrow}</div>
-          <h2 className="text-balance mt-3 text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">{title}</h2>
-          <p className="mt-4 text-lg leading-8 text-slate-600">{text}</p>
-        </div>
-        {children}
-      </div>
-    </section>
-  )
-}
-
-function FeatureCard({ icon: Icon, title, text }: { icon: IconType; title: string; text: string }) {
-  return (
-    <article className="rounded-lg border border-slate-200 bg-white p-6 transition hover:border-teal-200 hover:shadow-sm">
-      <div className="grid h-11 w-11 place-items-center rounded-md bg-teal-50 text-teal-700">
-        <Icon className="h-5 w-5" />
-      </div>
-      <h3 className="mt-5 text-lg font-semibold text-slate-950">{title}</h3>
-      <p className="mt-3 leading-7 text-slate-600">{text}</p>
-    </article>
-  )
-}
-
-function OperationalSection() {
-  return (
-    <section className="border-b border-slate-200 bg-slate-950 text-white">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-[0.85fr_1.15fr] md:py-20">
-        <div>
-          <div className="text-xs font-bold uppercase tracking-[0.22em] text-teal-300">Services</div>
-          <h2 className="text-balance mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-            From public website to production-grade AI narrative.
-          </h2>
-          <p className="mt-4 leading-8 text-slate-300">
-            Use this repo as a polished starting point for the pages buyers expect before they book a call or review a proposal.
-          </p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {services.map((service) => (
-            <div key={service} className="flex items-center gap-3 rounded-md border border-white/10 bg-white/[0.04] p-4">
-              <Check className="h-5 w-5 shrink-0 text-teal-300" />
-              <span className="font-medium text-slate-100">{service}</span>
+        </Card>
+        <div className="space-y-6">
+          <Card>
+            <h2 className="mb-4 font-semibold">{t.pricing.select}</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {tiers.map((tier) => (
+                <button
+                  key={tier}
+                  type="button"
+                  onClick={() => setSelected(tier)}
+                  className={`rounded-md border px-4 py-3 text-left text-sm font-semibold transition ${
+                    selected === tier ? 'border-primary bg-primary text-primary-foreground' : 'border-input hover:bg-accent'
+                  }`}
+                >
+                  {tier}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function PricingPreview() {
-  return (
-    <Section
-      eyebrow="Pricing"
-      title="Simple commercial paths for service teams."
-      text="Publish clear starting points without pretending every enterprise deployment is identical."
-    >
-      <PricingGrid compact />
-    </Section>
-  )
-}
-
-function PricingGrid({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className="grid gap-4 lg:grid-cols-3">
-      {pricing.map((plan) => (
-        <article
-          key={plan.name}
-          className={`rounded-lg border p-6 ${
-            plan.featured ? 'border-teal-600 bg-teal-50 shadow-sm' : 'border-slate-200 bg-white'
-          }`}
-        >
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-xl font-bold text-slate-950">{plan.name}</h3>
-            {plan.featured && <span className="rounded-full bg-teal-700 px-2.5 py-1 text-xs font-semibold text-white">Popular</span>}
-          </div>
-          <div className="mt-5 text-3xl font-bold text-slate-950">{plan.price}</div>
-          <p className="mt-3 leading-7 text-slate-600">{plan.detail}</p>
-          <ul className={`mt-6 grid gap-3 ${compact ? '' : 'min-h-40'}`}>
-            {plan.features.map((feature) => (
-              <li key={feature} className="flex gap-3 text-sm text-slate-700">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </article>
-      ))}
-    </div>
-  )
-}
-
-function ContentPreview() {
-  return (
-    <section className="border-b border-slate-200 bg-slate-50">
-      <div className="mx-auto grid max-w-6xl gap-6 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-20">
-        <ContentList title="Docs" icon={BookOpen} items={docs} to="/docs" />
-        <ContentList title="Blog" icon={FileText} items={posts} to="/blog" />
-      </div>
-    </section>
-  )
-}
-
-function ContentList({ title, icon: Icon, items, to }: { title: string; icon: IconType; items: Array<{ title: string; excerpt: string }>; to: string }) {
-  return (
-    <div className="rounded-lg border border-slate-200 bg-white p-6">
-      <div className="mb-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-md bg-slate-100 text-slate-700">
-            <Icon className="h-5 w-5" />
-          </div>
-          <h3 className="text-xl font-bold text-slate-950">{title}</h3>
-        </div>
-        <Link to={to} className="text-sm font-semibold text-teal-700">
-          View all
-        </Link>
-      </div>
-      <div className="grid gap-3">
-        {items.slice(0, 3).map((item) => (
-          <div key={item.title} className="rounded-md border border-slate-200 p-4">
-            <div className="font-semibold text-slate-950">{item.title}</div>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{item.excerpt}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function CTA() {
-  return (
-    <section className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="rounded-lg bg-slate-950 p-8 text-white md:p-10">
-          <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
-            <div>
-              <h2 className="text-balance text-3xl font-bold tracking-tight md:text-4xl">
-                Ready to publish a credible AI company site?
-              </h2>
-              <p className="mt-4 max-w-2xl leading-8 text-slate-300">
-                Fork the repo, rename the brand, adjust the content model, and deploy it as a modern static website.
-              </p>
+            <label className="mt-5 block text-sm font-medium">
+              {t.pricing.custom}
+              <input className="mt-2 h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder={t.pricing.placeholder} />
+            </label>
+            <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+              <span>{t.pricing.min}</span>
+              <span>{t.pricing.max}</span>
             </div>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
-            >
-              Start a conversation
-              <MessageSquare className="h-4 w-4" />
-            </Link>
-          </div>
+            <ButtonLink to="/pricing" className="mt-5 w-full justify-center">
+              {t.actions.buyCredits}
+            </ButtonLink>
+          </Card>
+          <Card>
+            <h2 className="mb-4 font-semibold">{t.pricing.whatYouGet}</h2>
+            <ul className="space-y-3">
+              {t.pricing.included.map((item) => (
+                <li key={item} className="flex gap-3 text-sm text-muted-foreground">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </Card>
         </div>
       </div>
-    </section>
+    </PageShell>
   )
 }
 
-function ProductsPage() {
+function About({ t }: { t: (typeof copy)['en'] }) {
+  const products = copy.en.home.products
   return (
-    <PageFrame
-      eyebrow="Products"
-      title="Productized pages for AI infrastructure, operations, and governance."
-      text="Each product section is written to explain business value, technical posture, and buying intent without overpromising."
-    >
-      <div className="grid gap-5 md:grid-cols-3">
-        {products.map((product) => (
-          <FeatureCard key={product.title} {...product} />
-        ))}
-      </div>
-      <div className="mt-10 grid gap-4 md:grid-cols-2">
-        {[
-          [Layers3, 'Vendor-neutral architecture', 'Describe how your offer works across model providers and cloud environments.'],
-          [Fingerprint, 'Identity-aware workflows', 'Show how teams, approvals, and access controls shape everyday usage.'],
-          [CircleDollarSign, 'Commercial clarity', 'Make prepaid credits, retainers, pilots, or managed service plans easy to understand.'],
-          [Globe2, 'Global-ready content', 'Keep page structures clean enough to translate into additional markets later.'],
-        ].map(([Icon, title, text]) => (
-          <FeatureCard key={String(title)} icon={Icon as IconType} title={String(title)} text={String(text)} />
-        ))}
-      </div>
-    </PageFrame>
-  )
-}
-
-function ServicesPage() {
-  return (
-    <PageFrame
-      eyebrow="Services"
-      title="A service catalog for serious AI adoption."
-      text="The page structure is tuned for consultancies, infrastructure teams, and AI implementation partners."
-    >
-      <div className="grid gap-4 md:grid-cols-2">
-        {services.map((service, index) => (
-          <div key={service} className="rounded-lg border border-slate-200 bg-white p-6">
-            <div className="text-sm font-bold text-teal-700">0{index + 1}</div>
-            <h3 className="mt-3 text-xl font-bold text-slate-950">{service}</h3>
-            <p className="mt-3 leading-7 text-slate-600">
-              Package the offer with outcomes, review gates, delivery expectations, and a clear next step for buyers.
+    <PageShell title={t.about.heading} subtitle="">
+      <div className="grid gap-8 md:grid-cols-[1fr_1fr]">
+        <div className="space-y-4 text-muted-foreground">
+          {t.about.intro.map((paragraph) => (
+            <p key={paragraph} className="leading-8">
+              {paragraph}
+            </p>
+          ))}
+          <div className="pt-4">
+            <h2 className="mb-4 text-xl font-semibold text-foreground">{t.about.contactHeading}</h2>
+            <p>
+              {t.about.contactLead}{' '}
+              <a className="font-medium text-primary hover:underline" href={`mailto:${brand.email}`}>
+                {brand.email}
+              </a>
             </p>
           </div>
-        ))}
-      </div>
-    </PageFrame>
-  )
-}
-
-function PricingPage() {
-  return (
-    <PageFrame
-      eyebrow="Pricing"
-      title="Transparent starting points, flexible enterprise delivery."
-      text="A pricing page for service-led companies that need simple packages without hiding complex work behind vague forms."
-    >
-      <PricingGrid />
-    </PageFrame>
-  )
-}
-
-function DocsPage() {
-  return (
-    <PageFrame
-      eyebrow="Docs"
-      title="Implementation notes for teams editing the site."
-      text="Use the docs area to publish deployment notes, product documentation, buyer enablement, or trust center content."
-    >
-      <div className="grid gap-4">
-        {docs.map((doc) => (
-          <DocRow key={doc.slug} title={doc.title} excerpt={doc.excerpt} />
-        ))}
-      </div>
-    </PageFrame>
-  )
-}
-
-function BlogPage() {
-  return (
-    <PageFrame
-      eyebrow="Blog"
-      title="Thought leadership without the fog."
-      text="Short, practical articles can reinforce the company's judgment before a prospect talks to sales."
-    >
-      <div className="grid gap-4 md:grid-cols-2">
-        {posts.map((post) => (
-          <article key={post.slug} className="rounded-lg border border-slate-200 bg-white p-6">
-            <div className="text-sm font-semibold text-slate-500">{post.date}</div>
-            <h3 className="mt-3 text-xl font-bold text-slate-950">{post.title}</h3>
-            <p className="mt-3 leading-7 text-slate-600">{post.excerpt}</p>
-            <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-teal-700">
-              Read article
-              <ChevronRight className="h-4 w-4" />
-            </div>
-          </article>
-        ))}
-      </div>
-    </PageFrame>
-  )
-}
-
-function ChangelogPage() {
-  return (
-    <PageFrame
-      eyebrow="Changelog"
-      title="Product updates that show momentum."
-      text="A public changelog is a quiet way to show the company is actively improving its offer."
-    >
-      <div className="grid gap-3">
-        {changelog.map(([version, text]) => (
-          <div key={version} className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-5 sm:flex-row sm:items-center">
-            <span className="w-24 rounded-full bg-slate-950 px-3 py-1 text-center text-sm font-bold text-white">{version}</span>
-            <span className="leading-7 text-slate-700">{text}</span>
-          </div>
-        ))}
-      </div>
-    </PageFrame>
-  )
-}
-
-function ContactPage() {
-  return (
-    <PageFrame
-      eyebrow="Contact"
-      title="Start with the use case, not a sales script."
-      text="Replace the sample contact details with your own form backend, scheduler, or CRM capture flow."
-    >
-      <div className="grid gap-6 md:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-lg border border-slate-200 bg-white p-6">
-          <Mail className="h-6 w-6 text-teal-700" />
-          <h3 className="mt-4 text-xl font-bold text-slate-950">Contact channel</h3>
-          <p className="mt-3 leading-7 text-slate-600">
-            Email <span className="font-semibold text-slate-950">{company.email}</span> or connect this page to your preferred form provider.
-          </p>
-          <div className="mt-6 grid gap-3">
-            {['AI workflow pilot', 'Enterprise website rebuild', 'Governance review'].map((item) => (
-              <div key={item} className="flex items-center gap-3 text-sm font-medium text-slate-700">
-                <BadgeCheck className="h-4 w-4 text-teal-700" />
-                {item}
+        </div>
+        <Card>
+          <h2 className="mb-5 text-xl font-semibold">{t.about.build}</h2>
+          <div className="space-y-4">
+            {products.map((product) => (
+              <div key={product.name} className="rounded-md border border-border p-4">
+                <div className="font-semibold">{product.name}</div>
+                <p className="mt-2 text-sm text-muted-foreground">{product.desc}</p>
               </div>
             ))}
           </div>
+        </Card>
+      </div>
+    </PageShell>
+  )
+}
+
+function Contact({ t }: { t: (typeof copy)['en'] }) {
+  return (
+    <PageShell title={t.contact.heading} subtitle={t.contact.subtitle}>
+      <div className="grid gap-6 md:grid-cols-3">
+        <ContactCard icon={CreditCard} label={t.contact.email} value={brand.email} href={`mailto:${brand.email}`} />
+        <ContactCard icon={Building2} label={t.contact.company} value={brand.company} />
+        <ContactCard icon={Globe2} label={t.contact.address} value={brand.address} sub={t.contact.addressSub} />
+      </div>
+      <p className="mt-6 text-sm text-muted-foreground">{t.contact.response}</p>
+    </PageShell>
+  )
+}
+
+function EmptyPage({ icon: Icon, title, subtitle, empty }: { icon: Icon; title: string; subtitle: string; empty: string }) {
+  return (
+    <PageShell title={title} subtitle={subtitle}>
+      <Card className="text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <Icon className="h-6 w-6" />
         </div>
-        <form className="rounded-lg border border-slate-200 bg-white p-6">
-          <div className="grid gap-4">
-            <FormField label="Name" placeholder="Ada Lovelace" />
-            <FormField label="Work email" placeholder="ada@company.com" type="email" />
-            <FormField label="Project brief" placeholder="Tell us what you want this site to communicate." textarea />
-            <button
-              type="button"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-teal-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-teal-800"
-            >
-              Send inquiry
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </form>
-      </div>
-    </PageFrame>
+        <p className="text-muted-foreground">{empty}</p>
+      </Card>
+    </PageShell>
   )
 }
 
-function FormField({ label, placeholder, type = 'text', textarea = false }: { label: string; placeholder: string; type?: string; textarea?: boolean }) {
-  const className =
-    'mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15'
-
+function PolicyPage({ title, t }: { title: string; t: (typeof copy)['en'] }) {
   return (
-    <label className="block text-sm font-semibold text-slate-700">
-      {label}
-      {textarea ? <textarea rows={5} className={className} placeholder={placeholder} /> : <input type={type} className={className} placeholder={placeholder} />}
-    </label>
-  )
-}
-
-function LegalPage({ type }: { type: 'terms' | 'privacy' }) {
-  const title = type === 'terms' ? 'Terms of Use' : 'Privacy Policy'
-
-  return (
-    <PageFrame
-      eyebrow="Legal"
-      title={title}
-      text="This sample text is included so the open-source website has the expected public pages. Replace it with counsel-approved language."
-    >
-      <div className="rounded-lg border border-slate-200 bg-white p-6 leading-8 text-slate-700">
-        <p>
-          {company.name} is a demo brand for an open-source frontend website. The repository does not collect data,
-          process payments, or provide legal advice by itself.
-        </p>
-        <p className="mt-4">
-          Before publishing a production site, review your data handling, vendor disclosures, security posture, and
-          commercial terms with qualified advisors.
-        </p>
-      </div>
-    </PageFrame>
-  )
-}
-
-function NotFound() {
-  return (
-    <PageFrame eyebrow="404" title="This page is not in the grid." text="The route does not exist yet.">
-      <Link to="/" className="inline-flex items-center gap-2 rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white">
-        Return home
-        <ArrowRight className="h-4 w-4" />
-      </Link>
-    </PageFrame>
-  )
-}
-
-function PageFrame({ eyebrow, title, text, children }: { eyebrow: string; title: string; text: string; children: React.ReactNode }) {
-  return (
-    <section className="min-h-[64vh] border-b border-slate-200 bg-slate-50">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
-        <div className="mb-10 max-w-3xl">
-          <div className="text-xs font-bold uppercase tracking-[0.22em] text-teal-700">{eyebrow}</div>
-          <h1 className="text-balance mt-3 text-4xl font-bold tracking-tight text-slate-950 md:text-5xl">{title}</h1>
-          <p className="mt-5 text-lg leading-8 text-slate-600">{text}</p>
+    <PageShell title={title} subtitle="">
+      <Card>
+        <div className="prose max-w-none text-muted-foreground">
+          <p>
+            {brand.name} provides this sample public page as part of the website template. Replace this placeholder with
+            reviewed policy language before production use.
+          </p>
+          <p className="mt-4">
+            For support questions, contact{' '}
+            <a className="text-primary hover:underline" href={`mailto:${brand.email}`}>
+              {brand.email}
+            </a>
+            .
+          </p>
+          <Link to="/" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+            {t.actions.back}
+            <ChevronRight className="h-4 w-4" />
+          </Link>
         </div>
-        {children}
+      </Card>
+    </PageShell>
+  )
+}
+
+function NotFound({ t }: { t: (typeof copy)['en'] }) {
+  return (
+    <PageShell title="404" subtitle="Page not found.">
+      <ButtonLink to="/">{t.actions.back}</ButtonLink>
+    </PageShell>
+  )
+}
+
+function PageShell({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+  return (
+    <section className="mx-auto min-h-[65vh] max-w-6xl px-4 py-14 sm:px-6 md:py-20">
+      <div className="mb-10">
+        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{title}</h1>
+        {subtitle && <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{subtitle}</p>}
       </div>
+      {children}
     </section>
   )
 }
 
-function DocRow({ title, excerpt }: { title: string; excerpt: string }) {
-  const Icon = useMemo(() => {
-    if (title.includes('Deployment')) return CloudCog
-    if (title.includes('Security')) return ClipboardCheck
-    return Terminal
-  }, [title])
+function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return <div className={`rounded-lg border border-dashed border-border/70 bg-card p-6 text-card-foreground ${className}`}>{children}</div>
+}
 
+function IconBox({ icon: Icon }: { icon: Icon }) {
   return (
-    <article className="flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 sm:flex-row sm:items-center">
-      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-md bg-teal-50 text-teal-700">
-        <Icon className="h-6 w-6" />
-      </div>
-      <div>
-        <h3 className="text-lg font-bold text-slate-950">{title}</h3>
-        <p className="mt-2 leading-7 text-slate-600">{excerpt}</p>
-      </div>
-    </article>
+    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+      <Icon className="h-5 w-5" />
+    </div>
   )
 }
 
-function Footer() {
+function ButtonLink({ to, children, variant = 'default', className = '' }: { to: string; children: React.ReactNode; variant?: 'default' | 'outline'; className?: string }) {
+  const base = 'inline-flex h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors'
+  const styles =
+    variant === 'outline'
+      ? 'border border-input bg-background text-foreground hover:bg-accent'
+      : 'bg-primary text-primary-foreground hover:bg-primary/90'
+
+  if (to.startsWith('#')) {
+    return (
+      <a href={to} className={`${base} ${styles} ${className}`}>
+        {children}
+      </a>
+    )
+  }
+
   return (
-    <footer className="bg-white">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_2fr]">
+    <Link to={to} className={`${base} ${styles} ${className}`}>
+      {children}
+    </Link>
+  )
+}
+
+function ContactCard({ icon: Icon, label, value, sub, href }: { icon: Icon; label: string; value: string; sub?: string; href?: string }) {
+  const content = (
+    <Card className="h-full">
+      <IconBox icon={Icon} />
+      <div className="text-sm font-medium text-muted-foreground">{label}</div>
+      <div className="mt-2 font-semibold">{value}</div>
+      {sub && <div className="mt-1 text-sm text-muted-foreground">{sub}</div>}
+    </Card>
+  )
+
+  return href ? <a href={href}>{content}</a> : content
+}
+
+function Footer({ t }: { t: (typeof copy)['en'] }) {
+  return (
+    <footer className="border-t border-border bg-muted/30">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1.4fr_2fr]">
         <div>
-          <Link to="/" className="flex items-center gap-3">
-            <LogoMark />
-            <span className="text-sm font-bold tracking-wide text-slate-950">{company.name}</span>
-          </Link>
-          <p className="mt-4 max-w-sm leading-7 text-slate-600">{company.tagline}</p>
+          <div className="flex items-center gap-3">
+            <BrandLogo />
+            <div>
+              <div className="font-semibold">{brand.company}</div>
+              <div className="text-sm text-muted-foreground">{brand.tagline}</div>
+            </div>
+          </div>
+          <p className="mt-4 max-w-sm text-sm leading-7 text-muted-foreground">{brand.address}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t.footer.powered}</p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-3">
-          <FooterColumn title="Company" links={[['Products', '/products'], ['Services', '/services'], ['Contact', '/contact']]} />
-          <FooterColumn title="Resources" links={[['Docs', '/docs'], ['Blog', '/blog'], ['Changelog', '/changelog']]} />
-          <FooterColumn title="Legal" links={[['Privacy', '/privacy'], ['Terms', '/terms']]} />
+        <div className="grid gap-8 sm:grid-cols-3">
+          <FooterColumn title={t.footer.product} links={[['Pricing', '/pricing'], ['About', '/about'], ['Contact', '/contact']]} />
+          <FooterColumn title={t.footer.resources} links={[['Docs', '/docs'], ['Blog', '/blog'], ['Changelog', '/changelog']]} />
+          <FooterColumn title={t.footer.legal} links={[['Terms', '/terms'], ['Privacy', '/privacy'], ['Refund', '/refund']]} />
         </div>
       </div>
-      <div className="border-t border-slate-200 px-4 py-5 text-center text-sm text-slate-500">
-        Open-source corporate AI website starter. Replace sample brand content before production use.
+      <div className="border-t border-border px-4 py-5 text-center text-sm text-muted-foreground">
+        © 2026 {brand.company}. {t.footer.rights}
       </div>
     </footer>
   )
@@ -828,10 +813,10 @@ function Footer() {
 function FooterColumn({ title, links }: { title: string; links: string[][] }) {
   return (
     <div>
-      <div className="font-semibold text-slate-950">{title}</div>
+      <h3 className="font-semibold">{title}</h3>
       <div className="mt-3 grid gap-2">
         {links.map(([label, to]) => (
-          <Link key={to} to={to} className="text-sm text-slate-600 transition hover:text-slate-950">
+          <Link key={to} to={to} className="text-sm text-muted-foreground hover:text-foreground">
             {label}
           </Link>
         ))}

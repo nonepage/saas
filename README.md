@@ -1,8 +1,8 @@
-# VectorGrid AI
+# Spark Gravity
 
-An original open-source corporate website starter for enterprise AI, infrastructure, consulting, and service teams.
+An original open-source corporate website for Spark Gravity, an enterprise AI company.
 
-It is inspired by the information architecture of modern AI company websites, but it does not copy MatrixFlow branding, text, artwork, or private implementation.
+It is inspired by the information architecture of modern AI company websites, but it does not copy third-party branding, text, artwork, or private implementation.
 
 ## Stack
 
@@ -41,4 +41,4 @@ npm run preview
 
 ## Customize
 
-Most brand, product, pricing, docs, blog, and changelog content lives in `src/App.tsx`. Replace the sample `VectorGrid AI` content with your company name, copy, routes, and contact flow before publishing.
+Most brand, product, pricing, docs, blog, and changelog content lives in `src/App.tsx`.

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Spark Gravity logo</title>
+  <desc id="desc">A spark orbiting a gravitational grid mark.</desc>
+  <defs>
+    <linearGradient id="g" x1="104" y1="78" x2="414" y2="430" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#60A5FA"/>
+      <stop offset="0.44" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="128" y1="118" x2="287" y2="289" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FDE68A"/>
+      <stop offset="0.5" stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#F8FAFC"/>
+  <path d="M395 256c0 76.8-62.2 139-139 139S117 332.8 117 256 179.2 117 256 117s139 62.2 139 139Z" fill="none" stroke="url(#g)" stroke-width="34"/>
+  <path d="M176 331c51 32 119 25 162-18 43-43 50-111 18-162" fill="none" stroke="#0F172A" stroke-width="18" stroke-linecap="round" opacity=".16"/>
+  <path d="M257 78l24 111 111 24-111 24-24 111-24-111-111-24 111-24 24-111Z" fill="url(#spark)"/>
+  <circle cx="353" cy="159" r="24" fill="#0F172A"/>
+  <circle cx="353" cy="159" r="11" fill="#F8FAFC"/>
+</svg>
